@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <DataSources>
+    <DataSource Name="DataSource">
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+      <rd:SecurityType>None</rd:SecurityType>
+    </DataSource>
+  </DataSources>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <Height>2in</Height>
+        <Style />
+      </Body>
+      <Width>6.5in</Width>
+      <Page>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="ItemType_GudfoodOrderLineCaption">
+      <DataType>String</DataType>
+      <DefaultValue>
+        <Values>
+          <Value>ItemType_GudfoodOrderLineCaption</Value>
+        </Values>
+      </DefaultValue>
+      <Prompt>ItemType_GudfoodOrderLineCaption</Prompt>
+    </ReportParameter>
+  </ReportParameters>
+  <Code>Public Function BlankZero(ByVal Value As Decimal)
+    if Value = 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankPos(ByVal Value As Decimal)
+    if Value &gt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankZeroAndPos(ByVal Value As Decimal)
+    if Value &gt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNeg(ByVal Value As Decimal)
+    if Value &lt; 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+
+Public Function BlankNegAndZero(ByVal Value As Decimal)
+    if Value &lt;= 0 then
+        Return ""
+    end if
+    Return Value
+End Function
+</Code>
+  <Language>=User!Language</Language>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>0eeb6585-38ae-40f1-885b-8d50088d51b4</rd:ReportID>
+  <DataSets>
+    <DataSet Name="DataSet_Result">
+      <Fields>
+        <Field Name="No_GudfoodOrderHeader">
+          <DataField>No_GudfoodOrderHeader</DataField>
+        </Field>
+        <Field Name="SelltoCustomerNo_GudfoodOrderHeader">
+          <DataField>SelltoCustomerNo_GudfoodOrderHeader</DataField>
+        </Field>
+        <Field Name="SelltoCustomerName_GudfoodOrderHeader">
+          <DataField>SelltoCustomerName_GudfoodOrderHeader</DataField>
+        </Field>
+        <Field Name="DateCreated_GudfoodOrderHeader">
+          <DataField>DateCreated_GudfoodOrderHeader</DataField>
+        </Field>
+        <Field Name="TotalQty_GudfoodOrderHeader">
+          <DataField>TotalQty_GudfoodOrderHeader</DataField>
+        </Field>
+        <Field Name="TotalQty_GudfoodOrderHeaderFormat">
+          <DataField>TotalQty_GudfoodOrderHeaderFormat</DataField>
+        </Field>
+        <Field Name="TotalAmount_GudfoodOrderHeader">
+          <DataField>TotalAmount_GudfoodOrderHeader</DataField>
+        </Field>
+        <Field Name="TotalAmount_GudfoodOrderHeaderFormat">
+          <DataField>TotalAmount_GudfoodOrderHeaderFormat</DataField>
+        </Field>
+        <Field Name="UsersID">
+          <DataField>UsersID</DataField>
+        </Field>
+        <Field Name="DocumentDate">
+          <DataField>DocumentDate</DataField>
+        </Field>
+        <Field Name="StartDate">
+          <DataField>StartDate</DataField>
+        </Field>
+        <Field Name="EndDate">
+          <DataField>EndDate</DataField>
+        </Field>
+        <Field Name="OrderNoFilter">
+          <DataField>OrderNoFilter</DataField>
+        </Field>
+        <Field Name="HideTotals">
+          <DataField>HideTotals</DataField>
+        </Field>
+        <Field Name="OrderNo_GudfoodOrderLine">
+          <DataField>OrderNo_GudfoodOrderLine</DataField>
+        </Field>
+        <Field Name="LineNo_GudfoodOrderLine">
+          <DataField>LineNo_GudfoodOrderLine</DataField>
+        </Field>
+        <Field Name="ItemNo_GudfoodOrderLine">
+          <DataField>ItemNo_GudfoodOrderLine</DataField>
+        </Field>
+        <Field Name="ItemType_GudfoodOrderLine">
+          <DataField>ItemType_GudfoodOrderLine</DataField>
+        </Field>
+        <Field Name="Description_GudfoodOrderLine">
+          <DataField>Description_GudfoodOrderLine</DataField>
+        </Field>
+        <Field Name="Quantity_GudfoodOrderLine">
+          <DataField>Quantity_GudfoodOrderLine</DataField>
+        </Field>
+        <Field Name="Quantity_GudfoodOrderLineFormat">
+          <DataField>Quantity_GudfoodOrderLineFormat</DataField>
+        </Field>
+        <Field Name="UnitPrice_GudfoodOrderLine">
+          <DataField>UnitPrice_GudfoodOrderLine</DataField>
+        </Field>
+        <Field Name="UnitPrice_GudfoodOrderLineFormat">
+          <DataField>UnitPrice_GudfoodOrderLineFormat</DataField>
+        </Field>
+        <Field Name="Amount_GudfoodOrderLine">
+          <DataField>Amount_GudfoodOrderLine</DataField>
+        </Field>
+        <Field Name="Amount_GudfoodOrderLineFormat">
+          <DataField>Amount_GudfoodOrderLineFormat</DataField>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DataSource</DataSourceName>
+        <CommandText />
+      </Query>
+    </DataSet>
+  </DataSets>
+</Report>
