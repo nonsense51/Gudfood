@@ -3,7 +3,7 @@ table 50017 "Gudfood Order Header"
     Caption = 'Gudfood Order Header';
     DrillDownPageID = 50012;
     LookupPageID = 50012;
-
+    //asdasdadsasd
     fields
     {
         field(1; "No."; Code[20])
