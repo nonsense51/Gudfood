@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 xliff-core-1.2-transitional.xsd">
+  <file datatype="xml" source-language="en-US" target-language="ru-RU" original="Please update this value">
+    <body>
+      <group id="body">
+        <trans-unit id="Page 2937229991 - Action 3051446377 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Take</source>
+          <target>Снять</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Item Picture - Action TakePicture - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2937229991 - Action 3051446377 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Activate the camera on the device.</source>
+          <target>Активация камеры устройства.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Item Picture - Action TakePicture - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2937229991 - Action 2864777531 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Import</source>
+          <target>Импорт</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Item Picture - Action ImportPicture - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2937229991 - Action 2864777531 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Import a picture file.</source>
+          <target>Импорт файла изображения.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Item Picture - Action ImportPicture - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2937229991 - Action 2665042526 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Export</source>
+          <target>Экспорт</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Item Picture - Action ExportFile - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2937229991 - Action 2665042526 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Export the picture to a file.</source>
+          <target>Экспорт изображения в файл.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Item Picture - Action ExportFile - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2937229991 - Action 3119204463 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Delete</source>
+          <target>Удалить</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Item Picture - Action DeletePicture - Property Caption</note>
+        </trans-unit>
+        <trans-unit id="Page 2937229991 - Action 3119204463 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Delete the record.</source>
+          <target>Удаление записи.</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Item Picture - Action DeletePicture - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2651207663 - Control 1577567912 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the code for Shortcut Dimension 1, which is one of two global dimension codes that you set up in the General Ledger Setup window.</source>
+          <target>Определяет код ярлыка измерения 1, который представляет собой один из двух кодов глобального измерения, настраиваемых в окне "Настройка ГК".</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Order Subpage - Control Shortcut Dimension 1 Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 2651207663 - Control 1003760969 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the code for Shortcut Dimension 2, which is one of two global dimension codes that you set up in the General Ledger Setup window.</source>
+          <target>Определяет код ярлыка измерения 2, который представляет собой один из двух кодов глобального измерения, настраиваемых в окне "Настройка ГК".</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Order Subpage - Control Shortcut Dimension 2 Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4231331752 - Control 1577567912 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the code for Shortcut Dimension 1, which is one of two global dimension codes that you set up in the General Ledger Setup window.</source>
+          <target>Определяет код ярлыка измерения 1, который представляет собой один из двух кодов глобального измерения, настраиваемых в окне "Настройка ГК".</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Posted Gudfood Order Subpage - Control Shortcut Dimension 1 Code - Property ToolTip</note>
+        </trans-unit>
+        <trans-unit id="Page 4231331752 - Control 1003760969 - Property 1295455071" size-unit="char" translate="yes" xml:space="preserve">
+          <source>Specifies the code for Shortcut Dimension 2, which is one of two global dimension codes that you set up in the General Ledger Setup window.</source>
+          <target>Определяет код ярлыка измерения 2, который представляет собой один из двух кодов глобального измерения, настраиваемых в окне "Настройка ГК".</target>
+          <note from="Developer" annotates="general" priority="2"></note>
+          <note from="Xliff Generator" annotates="general" priority="3">Page Posted Gudfood Order Subpage - Control Shortcut Dimension 2 Code - Property ToolTip</note>
+        </trans-unit>
+      </group>
+    </body>
+  </file>
+</xliff>
