@@ -46,7 +46,7 @@ page 50005 "Gudfood Item Picture"
 
                 trigger OnAction()
                 begin
-                    //ImportFromDevice();
+                    ImportFromDevice();
                 end;
             }
             action(ExportFile)
@@ -68,16 +68,16 @@ page 50005 "Gudfood Item Picture"
                     ExportPath: Text;
                     TemporaryPath: Text;
                 begin
-                    // TemporaryPath := 'C:\Users\dmber\Desktop\Images';
-                    // TestField("No.");
-                    // TestField(Description);
-                    // ConvertedCodeType := Format("No.");
-                    // ToFile := DummyPictureEntity.GetDefaultMediaDescription(Rec);
-                    // ConvertedCodeType := StringConversionManager.RemoveNonAlphaNumericCharacters(ConvertedCodeType);
-                    // ExportPath := TemporaryPath + ConvertedCodeType + Format(Picture.MediaId);
-                    // Picture.ExportFile(ExportPath + '.' + DummyPictureEntity.GetDefaultExtension());
+                    TemporaryPath := 'C:\Users\dmber\Desktop\Images';
+                    TestField("No.");
+                    TestField(Description);
+                    ConvertedCodeType := Format(Rec."No.");
+                    ToFile := DummyPictureEntity.GetDefaultMediaDescription(Rec);
+                    ConvertedCodeType := StringConversionManager.RemoveNonAlphaNumericCharacters(ConvertedCodeType);
+                    ExportPath := TemporaryPath + ConvertedCodeType + Format(Picture.MediaId);
+                    Picture.ExportFile(ExportPath + '.' + DummyPictureEntity.GetDefaultExtension());
 
-                    // FileManagement.ExportImage(ExportPath, ToFile);
+                    FileManagement.ExportImage(ExportPath, ToFile);
                 end;
             }
             action(DeletePicture)
@@ -91,7 +91,7 @@ page 50005 "Gudfood Item Picture"
 
                 trigger OnAction()
                 begin
-                    DeleteItemPicture;
+                    DeleteItemPicture();
                 end;
             }
         }
@@ -127,26 +127,25 @@ page 50005 "Gudfood Item Picture"
         FileName: Text;
         ClientFileName: Text;
     begin
-        // Find();
-        // TestField("No.");
-        // if Description = '' then
-        //     Error(MustSpecifyDescriptionErr);
+        Rec.Find();
+        Rec.TestField("No.");
+        if Rec.Description = '' then
+            Error(MustSpecifyDescriptionErr);
 
-        // if Picture.Count > 0 then
-        //     if not Confirm(OverrideImageQst) then
-        //         Error('');
+        if Rec.Picture.Count > 0 then
+            if not Confirm(OverrideImageQst) then
+                Error('');
+        ClientFileName := '';
+        FileName := FileManagement.UploadFile(SelectPictureTxt, ClientFileName);
+        if FileName = '' then
+            Error('');
 
-        // ClientFileName := '';
-        // FileName := FileManagement.UploadFile(SelectPictureTxt, ClientFileName);
-        // if FileName = '' then
-        //     Error('');
+        Clear(Picture);
+        Rec.Picture.ImportFile(FileName, ClientFileName);
+        Rec.Modify(true);
+        OnImportFromDeviceOnAfterModify(Rec);
 
-        // Clear(Picture);
-        // Picture.ImportFile(FileName, ClientFileName);
-        // Modify(true);
-        // OnImportFromDeviceOnAfterModify(Rec);
-
-        // if FileManagement.DeleteServerFile(FileName) then;
+        if FileManagement.DeleteServerFile(FileName) then;
     end;
 
     local procedure DoTakeNewPicture(): Boolean
@@ -168,10 +167,10 @@ page 50005 "Gudfood Item Picture"
         exit(false);
     end;
 
-    local procedure SetEditableOnPictureActions()
-    begin
-        DeleteExportEnabled := Picture.Count <> 0;
-    end;
+    // local procedure SetEditableOnPictureActions()
+    // begin
+    //     DeleteExportEnabled := Rec.Picture.Count <> 0;
+    // end;
 
     procedure IsCameraAvailable(): Boolean
     begin
@@ -185,13 +184,13 @@ page 50005 "Gudfood Item Picture"
 
     procedure DeleteItemPicture()
     begin
-        TestField("No.");
+        Rec.TestField("No.");
 
         if not Confirm(DeleteImageQst) then
             exit;
 
-        Clear(Picture);
-        Modify(true);
+        Clear(Rec.Picture);
+        Rec.Modify(true);
 
         OnAfterDeleteItemPicture(Rec);
     end;

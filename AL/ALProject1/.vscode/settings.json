@@ -1,0 +1,7 @@
+{
+     "al.codeAnalyzers": ["${CodeCop}"],
+     "al.enableCodeAnalysis": true,
+     "al.backgroundCodeAnalysis": true,
+     "CRS.FileNamePattern": "<ObjectNameShort>.<ObjectTypeShortPascalCase>.al",
+     "CRS.FileNamePatternExtensions": "<BaseNameShort>.<ObjectTypeShortPascalCase>.al"
+}

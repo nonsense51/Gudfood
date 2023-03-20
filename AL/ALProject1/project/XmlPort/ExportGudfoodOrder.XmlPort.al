@@ -91,8 +91,8 @@ xmlport 50000 "Export Gudfood Order"
 
     trigger OnInitXmlPort()
     begin
-        IF "Gudfood Order Line"."Order No." <> "Gudfood Order Header"."No." THEN
-            currXMLport.SKIP;
+        if "Gudfood Order Line"."Order No." <> "Gudfood Order Header"."No." then
+            currXMLport.Skip();
     end;
 }
 

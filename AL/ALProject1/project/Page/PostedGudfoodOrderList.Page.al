@@ -13,30 +13,42 @@ page 50013 "Posted Gudfood Order List"
         {
             repeater(Group)
             {
-                field("No."; "No.")
+                field("No."; Rec."No.")
                 {
+                    ToolTip = 'Specifies the order number';
                 }
-                field("Sell- to Customer No."; "Sell- to Customer No.")
+                field("Sell- to Customer No."; Rec."Sell- to Customer No.")
                 {
+                    Caption = 'Customer Number';
+                    ToolTip = 'Specifies customer number';
                 }
-                field("Sell-to Customer Name"; "Sell-to Customer Name")
+                field("Sell-to Customer Name"; Rec."Sell-to Customer Name")
                 {
+                    Caption = 'Customer Name';
+                    ToolTip = 'Specifies customer name';
                     Editable = false;
                 }
-                field("Order Date"; "Order Date")
+                field("Order Date"; Rec."Order Date")
                 {
+                    ToolTip = 'Specifies the order date';
+                    Style = Attention;
+                    StyleExpr = ChangeClr;
                 }
-                field("Posting No."; "Posting No.")
+                field("Posting No."; Rec."Posting No.")
                 {
+                    ToolTip = 'Specifies the posting number';
                 }
-                field("Date Created"; "Date Created")
+                field("Date Created"; Rec."Date Created")
                 {
+                    ToolTip = 'Date of created document';
                 }
-                field("Total Qty"; "Total Qty")
+                field("Total Qty"; Rec."Total Qty")
                 {
+                    ToolTip = 'Total quantity of ordered products';
                 }
-                field("Total Amount"; "Total Amount")
+                field("Total Amount"; Rec."Total Amount")
                 {
+                    ToolTip = 'Total price of ordered products';
                 }
             }
         }
@@ -46,24 +58,28 @@ page 50013 "Posted Gudfood Order List"
     {
         area(navigation)
         {
-            group(Action110011)
+            action(Dimensions)
             {
-                action(Dimensions)
-                {
-                    Image = Dimensions;
-                    ShortCutKey = 'Shift+Ctrl+D';
+                ToolTip = 'To see the dimensions';
+                Image = Dimensions;
+                ShortCutKey = 'Shift+Ctrl+D';
 
-                    trigger OnAction()
-                    begin
-                        ShowDocDim;
-                    end;
-                }
+                trigger OnAction()
+                begin
+                    Rec.ShowDocDim();
+                end;
             }
+
         }
     }
 
+    trigger OnAfterGetRecord()
+    begin
+        UpdateColor();
+    end;
+
     var
-        MyRecRef: RecordRef;
+        PostedGudfoodOrderHeaderRecordRef: RecordRef;
         [InDataSet]
         ChangeClr: Boolean;
 
@@ -71,17 +87,17 @@ page 50013 "Posted Gudfood Order List"
     var
         SelectionFilterManagement: Codeunit SelectionFilterManagement;
     begin
-        CurrPage.SETSELECTIONFILTER(Rec);
-        MyRecRef.GETTABLE(Rec);
-        EXIT(SelectionFilterManagement.GetSelectionFilter(MyRecRef, Rec.FIELDNO("No.")));
+        CurrPage.SetSelectionFilter(Rec);
+        PostedGudfoodOrderHeaderRecordRef.GetTable(Rec);
+        exit(SelectionFilterManagement.GetSelectionFilter(PostedGudfoodOrderHeaderRecordRef, Rec.FIELDNO("No.")));
     end;
 
     local procedure UpdateColor()
     begin
-        IF "Order Date" < TODAY THEN
-            ChangeClr := TRUE
-        ELSE
-            ChangeClr := FALSE;
+        if Rec."Order Date" < TODAY then
+            ChangeClr := true
+        else
+            ChangeClr := false;
     end;
 }
 

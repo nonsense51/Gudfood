@@ -12,37 +12,48 @@ page 50008 "Gudfood Order"
             group(General)
             {
                 Caption = 'General';
-                field("No."; "No.")
+                field("No."; Rec."No.")
                 {
+                    ToolTip = 'Specifies the order number';
                     TableRelation = "Gudfood Order Header"."No.";
+                    Editable = false;
                 }
-                field("Sell- to Customer No."; "Sell- to Customer No.")
+                field("Sell- to Customer No."; Rec."Sell- to Customer No.")
                 {
+                    Caption = 'Customer Number';
+                    ToolTip = 'To specify customer number';
                 }
-                field("Sell-to Customer Name"; "Sell-to Customer Name")
+                field("Sell-to Customer Name"; Rec."Sell-to Customer Name")
                 {
+                    Caption = 'Customer Name';
+                    ToolTip = 'Specifies customer name';
                 }
-                field("Order Date"; "Order Date")
+                field("Order Date"; Rec."Order Date")
                 {
+                    ToolTip = 'To specify the order date';
                     Style = Attention;
                     StyleExpr = ChangeClr;
                 }
-                field("Posting No."; "Posting No.")
+                field("Posting No."; Rec."Posting No.")
                 {
+                    ToolTip = 'Specifies the posting number';
                 }
-                field("Date Created"; "Date Created")
+                field("Date Created"; Rec."Date Created")
                 {
+                    ToolTip = 'Date of created document';
                 }
-                field("Total Qty"; "Total Qty")
+                field("Total Qty"; Rec."Total Qty")
                 {
+                    ToolTip = 'Total quantity of ordered products';
                 }
-                field("Total Amount"; "Total Amount")
+                field("Total Amount"; Rec."Total Amount")
                 {
+                    ToolTip = 'Total price of ordered products';
                 }
             }
             part(GudfoodOrderSubpage; "Gudfood Order Subpage")
             {
-                SubPageLink = "Order No." = FIELD("No.");
+                SubPageLink = "Order No." = field("No.");
             }
         }
     }
@@ -53,28 +64,31 @@ page 50008 "Gudfood Order"
         {
             action(Post)
             {
+                ToolTip = 'To post order to the Posted Documents';
                 Image = PostedOrder;
                 Promoted = true;
 
                 trigger OnAction()
                 begin
-                    GudfoodPost.RUN(Rec);
+                    GudfoodPost.Run(Rec);
                 end;
             }
             action("Post and Print")
             {
+                ToolTip = 'To post order to the Posted Documents and print report';
                 Image = PrintReport;
                 Promoted = true;
 
                 trigger OnAction()
                 begin
-                    "GudfoodPost+Print".RUN(Rec);
+                    GudfoodPostPrint.Run(Rec);
                 end;
             }
             group(PrintAndExportDocument)
             {
                 action("Print Document")
                 {
+                    ToolTip = 'To print report';
                     Image = PrintDocument;
                     Promoted = true;
                     PromotedIsBig = true;
@@ -91,63 +105,57 @@ page 50008 "Gudfood Order"
                 }
                 action("Export Order")
                 {
+                    ToolTip = 'To export order to Xml file';
                     Image = Export;
                     Promoted = true;
                     PromotedIsBig = true;
                     PromotedOnly = true;
 
                     trigger OnAction()
-                    var
-                        MyPort: XMLport "Export Gudfood Order";
-                        FileManagement: Codeunit "File Management";
-                        Instream: InStream;
-                        FileName: Text[250];
                     begin
-                        CurrPage.SETSELECTIONFILTER(Rec);
-                        XMLPORT.RUN(50000, FALSE, FALSE, Rec);
+                        CurrPage.SetSelectionFilter(Rec);
+                        XMLPORT.Run(50000, false, false, Rec);
                     end;
                 }
             }
         }
         area(navigation)
         {
-            group(Navigation)
+            action(Dimensions)
             {
-                action(Dimensions)
-                {
-                    Image = Dimensions;
-                    ShortCutKey = 'Shift+Ctrl+D';
+                ToolTip = 'To see the dimensions';
+                Image = Dimensions;
+                ShortCutKey = 'Shift+Ctrl+D';
 
-                    trigger OnAction()
-                    begin
-                        ShowDocDim;
-                        CurrPage.SAVERECORD;
-                    end;
-                }
+                trigger OnAction()
+                begin
+                    Rec.ShowDocDim();
+                    CurrPage.SaveRecord();
+                end;
             }
+
         }
     }
 
     trigger OnAfterGetRecord()
     begin
-        UpdateColor;
+        UpdateColor();
     end;
 
     var
+        GudfoodPost: Codeunit "Gudfood Post";
+        GudfoodPostPrint: Codeunit "Gudfood Post + Print";
+
         [InDataSet]
         ChangeClr: Boolean;
-        GudfoodPost: Codeunit "Gudfood Post";
-        "GudfoodPost+Print": Codeunit "Gudfood Post + Print";
-        GudfoodLine: Record "Gudfood Order Line";
-        MyReport: Report "Gudfood Order";
-        MyRecRef: RecordRef;
+
 
     local procedure UpdateColor()
     begin
-        IF "Order Date" < TODAY THEN
-            ChangeClr := TRUE
-        ELSE
-            ChangeClr := FALSE;
+        if Rec."Order Date" < Today then
+            ChangeClr := true
+        else
+            ChangeClr := false;
     end;
 }
 

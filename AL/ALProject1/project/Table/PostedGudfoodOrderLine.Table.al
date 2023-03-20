@@ -34,7 +34,7 @@ table 50020 "Posted Gudfood Order Line"
         }
         field(6; "Item Type"; Option)
         {
-            CalcFormula = Lookup("Gudfood Item".ItemType WHERE("No." = FIELD("Item No.")));
+            CalcFormula = lookup("Gudfood Item".ItemType where("No." = field("Item No.")));
             Caption = 'Item Type';
             FieldClass = FlowField;
             OptionMembers = " ",Salat,Burger,Capcake,Drink;
@@ -63,12 +63,12 @@ table 50020 "Posted Gudfood Order Line"
         field(50; "Shortcut Dimension 1 Code"; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(1));
         }
         field(51; "Shortcut Dimension 2 Code"; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(2));
         }
         field(480; "Dimension Set ID"; Integer)
         {
@@ -77,21 +77,17 @@ table 50020 "Posted Gudfood Order Line"
 
             trigger OnLookup()
             begin
-                ShowDimensions;
+                ShowDimensions();
             end;
         }
     }
 
     keys
     {
-        key(Key1; "Order No.", "Line No.")
+        key(PK; "Order No.", "Line No.")
         {
             Clustered = true;
         }
-    }
-
-    fieldgroups
-    {
     }
 
     var
@@ -99,7 +95,7 @@ table 50020 "Posted Gudfood Order Line"
 
     procedure ShowDimensions()
     begin
-        "Dimension Set ID" := DimMgt.EditDimensionSet("Dimension Set ID", STRSUBSTNO('%1 %2', "Order No.", "Line No."));
+        "Dimension Set ID" := DimMgt.EditDimensionSet("Dimension Set ID", StrSubstNo('%1 %2', "Order No.", "Line No."));
 
         DimMgt.UpdateGlobalDimFromDimSetID("Dimension Set ID", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
     end;

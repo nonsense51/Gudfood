@@ -12,50 +12,53 @@ page 50004 "Gudfood Item Card"
             {
                 field("No."; Rec."No.")
                 {
-                    ToolTip = 'To specidy number of item';
+                    ToolTip = 'To specify number of item';
 
                     trigger OnAssistEdit()
                     begin
                         IF Rec.AssistEdit(xRec) THEN
-                            CurrPage.UPDATE();
+                            CurrPage.Update();
                     end;
                 }
-                field("Unit Price"; "Unit Price")
+                field("Unit Price"; Rec."Unit Price")
                 {
+                    ToolTip = 'To specify product price';
                     NotBlank = true;
                     ShowMandatory = true;
                 }
-                field(ItemType; ItemType)
+                field(ItemType; Rec.ItemType)
                 {
+                    ToolTip = 'Choose the type of item';
                     NotBlank = true;
                     ShowMandatory = true;
                 }
-                field(Description; Description)
+                field(Description; Rec.Description)
                 {
+                    ToolTip = 'To specify description';
                     NotBlank = true;
                     ShowMandatory = true;
                 }
-                field("Shelf Life"; "Shelf Life")
+                field("Shelf Life"; Rec."Shelf Life")
                 {
+                    ToolTip = 'Choose date of item shelf life';
                     NotBlank = true;
                     ShowMandatory = true;
                 }
             }
             group("Order Information")
             {
-                field("Qty. Ordered"; "Qty. Ordered")
+                field("Qty. Ordered"; Rec."Qty. Ordered")
                 {
-
+                    ToolTip = 'Total quantity of items which already ordered';
                 }
-                field("Qty. in Order"; "Qty. in Order")
+                field("Qty. in Order"; Rec."Qty. in Order")
                 {
-
+                    ToolTip = 'Total quantity of items which in order now';
                 }
-            }
-            group(Images)
-            {
-                field(Picture; Picture)
+                field(Picture; Rec.Picture)
                 {
+                    ToolTip = 'Picture of item';
+                    Visible = false;
                 }
             }
         }
@@ -74,6 +77,7 @@ page 50004 "Gudfood Item Card"
         {
             action(Dimensions)
             {
+                ToolTip = 'Tap to see the dimensuions';
                 Image = Dimensions;
                 RunObject = Page "Default Dimensions";
                 RunPageLink = "Table ID" = CONST(50016), "No." = FIELD("No.");
@@ -84,10 +88,21 @@ page 50004 "Gudfood Item Card"
 
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
-        Rec.TestField(Description);
-        Rec.TestField("Unit Price");
-        Rec.TestField(ItemType);
-        Rec.TestField("Shelf Life");
+        if not IsPageEmpty(Rec) then begin
+            Rec.TestField(Description);
+            Rec.TestField("Unit Price");
+            Rec.TestField(ItemType);
+            Rec.TestField("Shelf Life");
+        end;
+    end;
+
+    procedure IsPageEmpty(GudfoodItem: Record "Gudfood Item"): Boolean
+    begin
+        if Rec."No." <> '' then
+            exit(false)
+        else
+            exit(true)
     end;
 }
+
 

@@ -41,31 +41,31 @@ table 50018 "Gudfood Order Line"
 
             trigger OnValidate()
             begin
-                GudfdItem.GET("Item No.");
-                Description := GudfdItem.Description;
-                "Unit Price" := GudfdItem."Unit Price";
-                "Item Type" := GudfdItem.ItemType;
+                GudfoodItem.Get("Item No.");
+                Rec."Item Type" := GudfoodItem.ItemType;
+                Rec.Description := GudfoodItem.Description;
+                Rec."Unit Price" := GudfoodItem."Unit Price";
 
-                IF GudfdItem."Shelf Life" <= "Date Created" THEN BEGIN
-                    ProductExpireNotification.MESSAGE := text001;
-                    ProductExpireNotification.SCOPE := NOTIFICATIONSCOPE::LocalScope;
-                    ProductExpireNotification.SEND;
-                END
-                ELSE
-                    IF GudfdItem."Shelf Life" - 1 <= "Date Created" THEN BEGIN
-                        ProductExpireNotification.MESSAGE := text002;
-                        ProductExpireNotification.SCOPE := NOTIFICATIONSCOPE::LocalScope;
-                        ProductExpireNotification.SEND;
-                    END;
+                if GudfoodItem."Shelf Life" <= "Date Created" then begin
+                    ProductExpireNotification.Message := text001Msg;
+                    ProductExpireNotification.Scope := NOTIFICATIONSCOPE::LocalScope;
+                    ProductExpireNotification.Send();
+                end
+                else
+                    if GudfoodItem."Shelf Life" - 1 <= "Date Created" then begin
+                        ProductExpireNotification.Message := text002Msg;
+                        ProductExpireNotification.Scope := NOTIFICATIONSCOPE::LocalScope;
+                        ProductExpireNotification.Send();
+                    end;
             end;
         }
         field(6; "Item Type"; Option)
         {
-            CalcFormula = Lookup("Gudfood Item".ItemType WHERE("No." = FIELD("Item No.")));
             Caption = 'Item Type';
+            CalcFormula = lookup("Gudfood Item".ItemType where("No." = field("Item No.")));
             FieldClass = FlowField;
             OptionMembers = " ",Salat,Burger,Capcake,Drink;
-            TableRelation = "Gudfood Item".ItemType;
+            OptionCaption = ' ,Salat,Burger,Capcake,Drink';
         }
         field(7; Description; Text[100])
         {
@@ -102,7 +102,7 @@ table 50018 "Gudfood Order Line"
         field(50; "Shortcut Dimension 1 Code"; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(1));
 
             trigger OnValidate()
             begin
@@ -112,7 +112,7 @@ table 50018 "Gudfood Order Line"
         field(51; "Shortcut Dimension 2 Code"; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(2));
 
             trigger OnValidate()
             begin
@@ -126,44 +126,39 @@ table 50018 "Gudfood Order Line"
 
             trigger OnLookup()
             begin
-                ShowDimensions;
+                ShowDimensions();
             end;
         }
     }
 
     keys
     {
-        key(Key1; "Order No.", "Line No.")
+        key(PK; "Order No.", "Line No.")
         {
             Clustered = true;
         }
     }
 
-    fieldgroups
-    {
-    }
-
     trigger OnInsert()
     begin
-        GudfdHeader.GET("Order No.");
-        "Sell- to Customer No." := GudfdHeader."Sell- to Customer No.";
-        "Date Created" := GudfdHeader."Date Created";
+        GudfoodOrderHeader.Get("Order No.");
+        "Sell- to Customer No." := GudfoodOrderHeader."Sell- to Customer No.";
+        "Date Created" := GudfoodOrderHeader."Date Created";
     end;
 
     var
-        GudfdItem: Record "Gudfood Item";
-        Keyvar: Integer;
-        GudfdHeader: Record "Gudfood Order Header";
+        GudfoodItem: Record "Gudfood Item";
+        GudfoodOrderHeader: Record "Gudfood Order Header";
+        DimensionManagement: Codeunit DimensionManagement;
         ProductExpireNotification: Notification;
-        text001: Label 'This product has expired!';
-        text002: Label 'This product has almost expired.';
-        DimMgt: Codeunit DimensionManagement;
+        text001Msg: Label 'This product has expired!';
+        text002Msg: Label 'This product has almost expired.';
 
     procedure ShowDimensions()
     begin
-        "Dimension Set ID" := DimMgt.EditDimensionSet("Dimension Set ID", STRSUBSTNO('%1 %2', "Order No.", "Line No."));
+        "Dimension Set ID" := DimensionManagement.EditDimensionSet("Dimension Set ID", StrSubstNo('%1 %2', "Order No.", "Line No."));
 
-        DimMgt.UpdateGlobalDimFromDimSetID("Dimension Set ID", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
+        DimensionManagement.UpdateGlobalDimFromDimSetID("Dimension Set ID", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
     end;
 
     local procedure CreateDim(Type1: Integer; No1: Code[20])
@@ -172,7 +167,7 @@ table 50018 "Gudfood Order Line"
         TableID: array[10] of Integer;
         No: array[10] of Code[20];
     begin
-        SourceCodeSetup.GET;
+        SourceCodeSetup.Get();
 
         TableID[1] := Type1;
         No[1] := No1;
@@ -180,25 +175,25 @@ table 50018 "Gudfood Order Line"
         "Shortcut Dimension 1 Code" := '';
         "Shortcut Dimension 2 Code" := '';
 
-        GudfdHeader.GET;
-        "Dimension Set ID" := DimMgt.GetDefaultDimID(TableID, No, SourceCodeSetup.GudfoodOrder, "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code", GudfdHeader."Dimension Set ID", DATABASE::"Gudfood Item");
-        DimMgt.UpdateGlobalDimFromDimSetID("Dimension Set ID", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
+        GudfoodOrderHeader.Get();
+        "Dimension Set ID" := DimensionManagement.GetDefaultDimID(TableID, No, SourceCodeSetup.GudfoodOrder, "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code", GudfoodOrderHeader."Dimension Set ID", DATABASE::"Gudfood Item");
+        DimensionManagement.UpdateGlobalDimFromDimSetID("Dimension Set ID", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
     end;
 
     procedure ValidateShortcutDimCode(FieldNumber: Integer; var ShortcutDimCode: Code[20])
     begin
-        DimMgt.ValidateShortcutDimValues(FieldNumber, ShortcutDimCode, "Dimension Set ID");
+        DimensionManagement.ValidateShortcutDimValues(FieldNumber, ShortcutDimCode, "Dimension Set ID");
     end;
 
-    local procedure LookupShortcutDimCode(FieldNumber: Integer; var ShortcutDimCode: Code[20])
-    begin
-        DimMgt.LookupDimValueCode(FieldNumber, ShortcutDimCode);
-        ValidateShortcutDimCode(FieldNumber, ShortcutDimCode);
-    end;
+    // local procedure LookupShortcutDimCode(FieldNumber: Integer; var ShortcutDimCode: Code[20])
+    // begin
+    //     DimMgt.LookupDimValueCode(FieldNumber, ShortcutDimCode);
+    //     ValidateShortcutDimCode(FieldNumber, ShortcutDimCode);
+    // end;
 
     procedure ShowShortcutDimCode(var ShortcutDimCode: array[8] of Code[20])
     begin
-        DimMgt.GetShortcutDimensions("Dimension Set ID", ShortcutDimCode);
+        DimensionManagement.GetShortcutDimensions("Dimension Set ID", ShortcutDimCode);
     end;
 }
 

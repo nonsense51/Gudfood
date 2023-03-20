@@ -1,9 +1,8 @@
 report 50002 "Gudfood Order"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './GudfoodOrder.rdlc';
+    RDLCLayout = './Report/GudfoodOrder.rdlc';
     Caption = 'Gudfood Order';
-
     dataset
     {
         dataitem("Gudfood Order Header"; "Gudfood Order Header")
@@ -78,17 +77,17 @@ report 50002 "Gudfood Order"
 
             trigger OnPreDataItem()
             begin
-                IF ("Start Date" <> 0D) AND ("End Date" <> 0D) THEN
-                    "Gudfood Order Header".SETFILTER("Date Created", '%1..%2', "Start Date", "End Date")
-                ELSE
-                    IF ("Start Date" = 0D) AND ("End Date" <> 0D) THEN
-                        "Gudfood Order Header".SETFILTER("Date Created", '..%1', "End Date")
-                    ELSE
-                        IF ("Start Date" <> 0D) AND ("End Date" = 0D) THEN
-                            "Gudfood Order Header".SETFILTER("Date Created", '%1..', "Start Date");
+                if ("Start Date" <> 0D) and ("End Date" <> 0D) then
+                    "Gudfood Order Header".SetFilter("Date Created", '%1..%2', "Start Date", "End Date")
+                else
+                    if ("Start Date" = 0D) and ("End Date" <> 0D) then
+                        "Gudfood Order Header".SetFilter("Date Created", '..%1', "End Date")
+                    else
+                        if ("Start Date" <> 0D) and ("End Date" = 0D) then
+                            "Gudfood Order Header".SetFilter("Date Created", '%1..', "Start Date");
 
-                IF OrderNoFilter <> '' THEN
-                    "Gudfood Order Header".SETFILTER("No.", OrderNoFilter);
+                if OrderNoFilter <> '' then
+                    "Gudfood Order Header".SetFilter("No.", OrderNoFilter);
             end;
         }
     }
@@ -117,13 +116,13 @@ report 50002 "Gudfood Order"
 
                         trigger OnLookup(var Text: Text): Boolean
                         begin
-                            CLEAR(OrderNoFilter);
-                            OrderPage.LOOKUPMODE(TRUE);
-                            IF OrderPage.RUNMODAL() = ACTION::LookupOK THEN BEGIN
+                            Clear(OrderNoFilter);
+                            OrderPage.LookupMode(true);
+                            if OrderPage.RunModal() = ACTION::LookupOK then begin
                                 Text := OrderNoFilter + OrderPage.GetSelectionFilters();
-                                EXIT(TRUE);
-                            END ELSE
-                                EXIT(FALSE);
+                                exit(true);
+                            end else
+                                exit(false);
                         end;
                     }
                 }
@@ -142,37 +141,33 @@ report 50002 "Gudfood Order"
 
         trigger OnOpenPage()
         begin
-            IF NOT GudfoodOrderHdrGlb.ISEMPTY THEN BEGIN
+            if not GudfoodOrderHdrGlb.IsEmpty then begin
                 "Start Date" := GudfoodOrderHdrGlb."Date Created";
                 "End Date" := GudfoodOrderHdrGlb."Date Created";
                 OrderNoFilter := GudfoodOrderHdrGlb."No.";
-            END;
+            end;
         end;
     }
-
-    labels
-    {
-    }
-
     trigger OnPreReport()
     begin
-        UsersID := USERID;
-        DocumentDate := TODAY;
+        UsersID := UserId;
+        DocumentDate := Today;
     end;
 
     var
+        GudfoodOrderHdrGlb: Record "Gudfood Order Header";
+        OrderPage: Page "Gudfood Order List";
         UsersID: Code[30];
         DocumentDate: Date;
         "Start Date": Date;
         "End Date": Date;
         OrderNoFilter: Text[250];
-        OrderPage: Page "Gudfood Order List";
         HideTotals: Boolean;
-        GudfoodOrderHdrGlb: Record "Gudfood Order Header";
 
-    procedure SetGlobalVar(NewGudfoodOrderHdr: Record "Gudfood Order Header")
+
+    procedure SetGlobalVar(NewGudfoodOrderHeader: Record "Gudfood Order Header")
     begin
-        GudfoodOrderHdrGlb := NewGudfoodOrderHdr;
+        GudfoodOrderHdrGlb := NewGudfoodOrderHeader;
     end;
 }
 

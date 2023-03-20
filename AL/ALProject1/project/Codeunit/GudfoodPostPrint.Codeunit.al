@@ -4,14 +4,16 @@ codeunit 50002 "Gudfood Post + Print"
 
     trigger OnRun()
     begin
-        PostGudfoodOrderHdr.RUN(Rec);
+        GudfoodPost.Run(Rec);
         Commit();
-        PostedGudfoodOrderReport.PostedGudfoodOrderPrint(Rec);
-        PostedGudfoodOrderReport.RUN;
+        PostedGudfoodOrder.PostedGudfoodOrderPrint(Rec);
+        PostedGudfoodOrder.Run();
     end;
 
     var
-        PostGudfoodOrderHdr: Codeunit "Gudfood Post";
-        PostedGudfoodOrderReport: Report "Posted Gudfood Order";
+
+        PostedGudfoodOrder: Report "Posted Gudfood Order";
+        GudfoodPost: Codeunit "Gudfood Post";
+
 }
 
