@@ -135,10 +135,6 @@ report 50002 "Gudfood Order"
             }
         }
 
-        actions
-        {
-        }
-
         trigger OnOpenPage()
         begin
             if not GudfoodOrderHdrGlb.IsEmpty then begin

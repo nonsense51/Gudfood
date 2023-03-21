@@ -57,6 +57,26 @@ page 50009 "Posted Gudfood Order"
 
     actions
     {
+        area(Processing)
+        {
+            action("Print Document")
+            {
+                ToolTip = 'To print report';
+                Image = PrintDocument;
+                Promoted = true;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                var
+                    PostedGudfoodOrderReport: Report "Posted Gudfood Order";
+                begin
+                    CurrPage.SetSelectionFilter(Rec);
+                    PostedGudfoodOrderReport.SetGlobalVar(Rec);
+                    PostedGudfoodOrderReport.Run();
+                end;
+            }
+        }
         area(navigation)
         {
             action(Dimensions)

@@ -56,7 +56,7 @@ page 50012 "Gudfood Order List"
 
     actions
     {
-        area(Processing)
+        area(Creation)
         {
             action(Post)
             {

@@ -57,13 +57,13 @@ page 50011 "Posted Gudfood Order Subpage"
                 {
                     ApplicationArea = Dimensions;
                     ToolTip = 'Specifies the code for Shortcut Dimension 1, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
-                    Visible = DimVisible1;
+                    Visible = false;
                 }
                 field("Shortcut Dimension 2 Code"; "Shortcut Dimension 2 Code")
                 {
                     ApplicationArea = Dimensions;
                     ToolTip = 'Specifies the code for Shortcut Dimension 2, which is one of two global dimension codes that you set up in the General Ledger Setup window.';
-                    Visible = DimVisible2;
+                    Visible = false;
                 }
                 field(ShortcutDimCode3; ShortcutDimCode[3])
                 {

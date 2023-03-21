@@ -1,7 +1,7 @@
 report 50003 "Posted Gudfood Order"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './PostedGudfoodOrder.rdlc';
+    RDLCLayout = './Report/PostedGudfoodReport.rdlc';
     Caption = 'Gudfood Order';
 
     dataset
@@ -142,10 +142,10 @@ report 50003 "Posted Gudfood Order"
 
         trigger OnOpenPage()
         begin
-            if not PostedGudFoodOrderHdr.IsEmpty then begin
-                "Start Date" := PostedGudFoodOrderHdr."Date Created";
-                "End Date" := PostedGudFoodOrderHdr."Date Created";
-                OrderNoFilter := PostedGudFoodOrderHdr."No.";
+            if not "Posted Gudfood Order Header".IsEmpty then begin
+                "Start Date" := "Posted Gudfood Order Header"."Date Created";
+                "End Date" := "Posted Gudfood Order Header"."Date Created";
+                OrderNoFilter := "Posted Gudfood Order Header"."No.";
             end;
         end;
     }
@@ -161,7 +161,6 @@ report 50003 "Posted Gudfood Order"
     end;
 
     var
-
         PostedGudFoodOrderHdr: Record "Gudfood Order Header";
         OrderPage: Page "Posted Gudfood Order List";
         UsersID: Code[30];
@@ -171,9 +170,14 @@ report 50003 "Posted Gudfood Order"
         OrderNoFilter: Text[250];
         HideTotals: Boolean;
 
-    procedure PostedGudfoodOrderPrint(NewPostedGudfoodOrderHeader: Record "Gudfood Order Header")
+    procedure PostedGudfoodOrderPrint(NewGudfoodOrderHeader: Record "Gudfood Order Header")
     begin
-        PostedGudFoodOrderHdr := NewPostedGudfoodOrderHeader;
+        PostedGudFoodOrderHdr := NewGudfoodOrderHeader;
+    end;
+
+    procedure SetGlobalVar(NewPostedGudfoodOrderHeader: Record "Posted Gudfood Order Header")
+    begin
+        "Posted Gudfood Order Header" := NewPostedGudfoodOrderHeader;
     end;
 }
 
