@@ -18,7 +18,4 @@ tableextension 50050 "Sales & Receivables Setup Ext." extends "Sales & Receivabl
             TableRelation = "No. Series";
         }
     }
-
-    var
-        myInt: Integer;
 }

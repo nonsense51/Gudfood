@@ -13,31 +13,38 @@ page 50003 "Gudfood Item List"
         {
             repeater(Group)
             {
-                field(Code; Rec."No.")
+                field("No."; Rec."No.")
                 {
+                    ToolTip = 'To specify number of item';
                 }
-                field("Unit Price"; "Unit Price")
+                field("Unit Price"; Rec."Unit Price")
                 {
+                    ToolTip = 'To specify product price';
                 }
-                field(ItemType; ItemType)
+                field(ItemType; Rec.ItemType)
                 {
+                    ToolTip = 'Choose the type of item';
                 }
-                field("Qty. Ordered"; "Qty. Ordered")
+                field("Shelf Life"; Rec."Shelf Life")
                 {
+                    ToolTip = 'Choose date of item shelf life';
                 }
-                field("Qty. in Order"; "Qty. in Order")
+                field("Qty. Ordered"; Rec."Qty. Ordered")
                 {
+                    ToolTip = 'Total quantity of items which already ordered';
                 }
-                field("Shelf Life"; "Shelf Life")
+                field("Qty. in Order"; Rec."Qty. in Order")
                 {
+                    ToolTip = 'Total quantity of items which in order now';
                 }
+
             }
         }
         area(factboxes)
         {
             part(GudfoodItemPicture; "Gudfood Item Picture")
             {
-                SubPageLink = "No." = FIELD("No.");
+                SubPageLink = "No." = field("No.");
             }
         }
     }
@@ -46,34 +53,34 @@ page 50003 "Gudfood Item List"
     {
         area(navigation)
         {
-            group(Action100001001)
+            group(Dimensions)
             {
-                group(Dimensions)
+                Image = Dimensions;
+                action("Dimensions-Single")
                 {
+                    ToolTip = 'To see single dimansion';
                     Image = Dimensions;
-                    action("Dimensions-Single")
-                    {
-                        Image = Dimensions;
-                        RunObject = Page 540;
-                        RunPageLink = "Table ID" = CONST(50016), "No." = FIELD("No.");
-                        ShortCutKey = 'Shift+Ctrl+D';
-                    }
-                    action("Dimensions-Multiple")
-                    {
-                        Image = DimensionSets;
+                    RunObject = Page 540;
+                    RunPageLink = "Table ID" = const(50016), "No." = field("No.");
+                    ShortCutKey = 'Shift+Ctrl+D';
+                }
+                action("Dimensions-Multiple")
+                {
+                    ToolTip = 'To see multiply dimansion';
+                    Image = DimensionSets;
 
-                        trigger OnAction()
-                        var
-                            GudfoodItem: Record "Gudfood Item";
-                            DefaultDimensionsMultiple: Page "Default Dimensions-Multiple";
-                        begin
-                            // CurrPage.SetSelectionFilter(GudfoodItem);
-                            // DefaultDimensionsMultiple.SetMultiGudfoodItem(GudfoodItem);
-                            // DefaultDimensionsMultiple.RUNMODAL;
-                        end;
-                    }
+                    trigger OnAction()
+                    var
+                        GudfoodItem: Record "Gudfood Item";
+                        DefaultDimensionsMultiple: Page "Default Dimensions-Multiple";
+                    begin
+                        CurrPage.SetSelectionFilter(GudfoodItem);
+                        DefaultDimensionsMultiple.SetMultiGudfoodItem(GudfoodItem);
+                        DefaultDimensionsMultiple.RunModal();
+                    end;
                 }
             }
+
         }
     }
 }

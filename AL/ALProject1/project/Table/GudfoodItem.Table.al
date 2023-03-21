@@ -13,11 +13,11 @@ table 50016 "Gudfood Item"
 
             trigger OnValidate()
             begin
-                IF "No." <> xRec."No." THEN BEGIN
-                    SalesSetup.GET;
+                if "No." <> xRec."No." then begin
+                    SalesSetup.Get();
                     NoMgt.TestManual(SalesSetup."Gudfood Item Nos.");
                     "No. Series" := '';
-                END;
+                end;
             end;
         }
         field(2; Description; Text[100])
@@ -42,14 +42,14 @@ table 50016 "Gudfood Item"
         field(5; "Qty. Ordered"; Decimal)
         {
 
-            CalcFormula = Sum("Posted Gudfood Order Line".Quantity WHERE("Item No." = FIELD("No.")));
+            CalcFormula = sum("Posted Gudfood Order Line".Quantity where("Item No." = field("No.")));
             Caption = 'Qty. Ordered';
             FieldClass = FlowField;
 
         }
         field(6; "Qty. in Order"; Decimal)
         {
-            CalcFormula = Sum("Gudfood Order Line".Quantity WHERE("Item No." = FIELD("No.")));
+            CalcFormula = sum("Gudfood Order Line".Quantity where("Item No." = field("No.")));
             Caption = 'Qty. in Order';
             FieldClass = FlowField;
         }
@@ -86,14 +86,10 @@ table 50016 "Gudfood Item"
 
     keys
     {
-        key(Key1; "No.")
+        key(PK; "No.")
         {
             Clustered = true;
         }
-    }
-
-    fieldgroups
-    {
     }
 
     trigger OnDelete()
@@ -103,20 +99,18 @@ table 50016 "Gudfood Item"
 
     trigger OnInsert()
     begin
-        IF "No." = '' THEN
-            IF DocumentNoVisability.ItemNoSeriesIsDefault THEN BEGIN
-                SalesSetup.GET;
+        if "No." = '' then
+            if DocumentNoVisability.ItemNoSeriesIsDefault() then begin
+                SalesSetup.Get();
                 NoMgt.InitSeries(SalesSetup."Gudfood Item Nos.", xRec."No. Series", 0D, "No.", "No. Series");
-            END;
+            end;
 
         DimMgt.UpdateDefaultDim(DATABASE::"Gudfood Item", "No.", "Global Dimension 1 Code", "Global Dimension 2 Code");
-
-
     end;
 
     var
-        DocumentNoVisability: Codeunit DocumentNoVisibility;
         SalesSetup: Record "Sales & Receivables Setup";
+        DocumentNoVisability: Codeunit DocumentNoVisibility;
         NoMgt: Codeunit NoSeriesManagement;
         DimMgt: Codeunit DimensionManagement;
 
@@ -131,7 +125,7 @@ table 50016 "Gudfood Item"
             if NoMgt.SelectSeries(SalesSetup."Gudfood Item Nos.", OldGudfoodItem."No. Series", "No. Series") then begin
                 NoMgt.SetSeries("No.");
                 Rec := NewGudfoodItem;
-                Exit(TRUE);
+                exit(true);
             end;
         end;
 

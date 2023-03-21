@@ -13,59 +13,85 @@ page 50009 "Posted Gudfood Order"
             {
                 field("No."; "No.")
                 {
+                    ToolTip = 'Specifies the order number';
                 }
-                field("Sell- to Customer No."; "Sell- to Customer No.")
+                field("Sell- to Customer No."; Rec."Sell- to Customer No.")
                 {
+                    Caption = 'Customer Number';
+                    ToolTip = 'Specifies customer number';
                 }
-                field("Sell-to Customer Name"; "Sell-to Customer Name")
+                field("Sell-to Customer Name"; Rec."Sell-to Customer Name")
                 {
+                    Caption = 'Customer Name';
+                    ToolTip = 'Specifies customer name';
                     Editable = false;
                 }
-                field("Order Date"; "Order Date")
+                field("Order Date"; Rec."Order Date")
                 {
+                    ToolTip = 'Specifies the order date';
                 }
-                field("Posting No."; "Posting No.")
+                field("Posting No."; Rec."Posting No.")
                 {
+                    ToolTip = 'Specifies the posting number';
                 }
-                field("Date Created"; "Date Created")
+                field("Date Created"; Rec."Date Created")
                 {
+                    ToolTip = 'Date of created document';
                 }
-                field("Total Qty"; "Total Qty")
+                field("Total Qty"; Rec."Total Qty")
                 {
+                    ToolTip = 'Total quantity of ordered products';
                 }
-                field("Total Amount"; "Total Amount")
+                field("Total Amount"; Rec."Total Amount")
                 {
-                }
-                field("No. Series"; "No. Series")
-                {
+                    ToolTip = 'Total price of ordered products';
                 }
             }
 
             part(PostedGudfoodOrderSubpage; "Posted Gudfood Order Subpage")
             {
-                SubPageLink = "Order No." = FIELD("No.");
+                SubPageLink = "Order No." = field("No.");
             }
         }
     }
 
     actions
     {
+        area(Processing)
+        {
+            action("Print Document")
+            {
+                ToolTip = 'To print report';
+                Image = PrintDocument;
+                Promoted = true;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+
+                trigger OnAction()
+                var
+                    PostedGudfoodOrderReport: Report "Posted Gudfood Order";
+                begin
+                    CurrPage.SetSelectionFilter(Rec);
+                    PostedGudfoodOrderReport.SetGlobalVar(Rec);
+                    PostedGudfoodOrderReport.Run();
+                end;
+            }
+        }
         area(navigation)
         {
-            group(Navigation)
+            action(Dimensions)
             {
-                action(Dimensions)
-                {
-                    Image = Dimensions;
-                    Promoted = true;
-                    ShortCutKey = 'Shift+Ctrl+D';
+                ToolTip = 'To see the dimensions';
+                Image = Dimensions;
+                Promoted = true;
+                ShortCutKey = 'Shift+Ctrl+D';
 
-                    trigger OnAction()
-                    begin
-                        ShowDocDim;
-                    end;
-                }
+                trigger OnAction()
+                begin
+                    Rec.ShowDocDim();
+                end;
             }
+
         }
     }
 }

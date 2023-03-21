@@ -1,7 +1,7 @@
 report 50003 "Posted Gudfood Order"
 {
     DefaultLayout = RDLC;
-    RDLCLayout = './PostedGudfoodOrder.rdlc';
+    RDLCLayout = './Report/PostedGudfoodReport.rdlc';
     Caption = 'Gudfood Order';
 
     dataset
@@ -47,7 +47,7 @@ report 50003 "Posted Gudfood Order"
             }
             dataitem("Posted Gudfood Order Line"; "Posted Gudfood Order Line")
             {
-                DataItemLink = "Order No." = FIELD("No.");
+                DataItemLink = "Order No." = field("No.");
                 DataItemLinkReference = "Posted Gudfood Order Header";
                 column(OrderNo_GudfoodOrderLine; "Posted Gudfood Order Line"."Order No.")
                 {
@@ -78,17 +78,17 @@ report 50003 "Posted Gudfood Order"
 
             trigger OnPreDataItem()
             begin
-                IF ("Start Date" <> 0D) AND ("End Date" <> 0D) THEN
-                    "Posted Gudfood Order Header".SETFILTER("Date Created", '%1..%2', "Start Date", "End Date")
-                ELSE
-                    IF ("Start Date" = 0D) AND ("End Date" <> 0D) THEN
-                        "Posted Gudfood Order Header".SETFILTER("Date Created", '..%1', "End Date")
-                    ELSE
-                        IF ("Start Date" <> 0D) AND ("End Date" = 0D) THEN
-                            "Posted Gudfood Order Header".SETFILTER("Date Created", '%1..', "Start Date");
+                if ("Start Date" <> 0D) and ("End Date" <> 0D) then
+                    "Posted Gudfood Order Header".SetFilter("Date Created", '%1..%2', "Start Date", "End Date")
+                else
+                    if ("Start Date" = 0D) and ("End Date" <> 0D) then
+                        "Posted Gudfood Order Header".SetFilter("Date Created", '..%1', "End Date")
+                    else
+                        if ("Start Date" <> 0D) and ("End Date" = 0D) then
+                            "Posted Gudfood Order Header".SetFilter("Date Created", '%1..', "Start Date");
 
-                IF OrderNoFilter <> '' THEN
-                    "Posted Gudfood Order Header".SETFILTER("No.", OrderNoFilter);
+                if OrderNoFilter <> '' then
+                    "Posted Gudfood Order Header".SetFilter("No.", OrderNoFilter);
             end;
         }
     }
@@ -117,13 +117,13 @@ report 50003 "Posted Gudfood Order"
 
                         trigger OnLookup(var Text: Text): Boolean
                         begin
-                            CLEAR(OrderNoFilter);
-                            OrderPage.LOOKUPMODE(TRUE);
-                            IF OrderPage.RUNMODAL() = ACTION::LookupOK THEN BEGIN
+                            Clear(OrderNoFilter);
+                            OrderPage.LookupMode(true);
+                            if OrderPage.RunModal() = ACTION::LookupOK then begin
                                 Text := OrderNoFilter + OrderPage.GetSelectionFilters();
-                                EXIT(TRUE);
-                            END ELSE
-                                EXIT(FALSE);
+                                exit(true);
+                            end else
+                                exit(false);
                         end;
                     }
                 }
@@ -142,11 +142,11 @@ report 50003 "Posted Gudfood Order"
 
         trigger OnOpenPage()
         begin
-            IF NOT PostedGudFoodOrderHdr.ISEMPTY THEN BEGIN
-                "Start Date" := PostedGudFoodOrderHdr."Date Created";
-                "End Date" := PostedGudFoodOrderHdr."Date Created";
-                OrderNoFilter := PostedGudFoodOrderHdr."No.";
-            END;
+            if not "Posted Gudfood Order Header".IsEmpty then begin
+                "Start Date" := "Posted Gudfood Order Header"."Date Created";
+                "End Date" := "Posted Gudfood Order Header"."Date Created";
+                OrderNoFilter := "Posted Gudfood Order Header"."No.";
+            end;
         end;
     }
 
@@ -156,23 +156,28 @@ report 50003 "Posted Gudfood Order"
 
     trigger OnPreReport()
     begin
-        UsersID := USERID;
+        UsersID := UserId;
         DocumentDate := TODAY;
     end;
 
     var
+        PostedGudFoodOrderHdr: Record "Gudfood Order Header";
+        OrderPage: Page "Posted Gudfood Order List";
         UsersID: Code[30];
         DocumentDate: Date;
         "Start Date": Date;
         "End Date": Date;
         OrderNoFilter: Text[250];
-        OrderPage: Page "Posted Gudfood Order List";
         HideTotals: Boolean;
-        PostedGudFoodOrderHdr: Record "Gudfood Order Header";
 
-    procedure PostedGudfoodOrderPrint(NewPostedGudfoodOrderHdr: Record "Gudfood Order Header")
+    procedure PostedGudfoodOrderPrint(NewGudfoodOrderHeader: Record "Gudfood Order Header")
     begin
-        PostedGudFoodOrderHdr := NewPostedGudfoodOrderHdr;
+        PostedGudFoodOrderHdr := NewGudfoodOrderHeader;
+    end;
+
+    procedure SetGlobalVar(NewPostedGudfoodOrderHeader: Record "Posted Gudfood Order Header")
+    begin
+        "Posted Gudfood Order Header" := NewPostedGudfoodOrderHeader;
     end;
 }
 

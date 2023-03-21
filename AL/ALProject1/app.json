@@ -26,7 +26,11 @@
     "includeSourceInSymbolFile": true
   },
   "runtime": "9.0",
+  "target": "OnPrem",
+  
   "features": [
     "TranslationFile"
   ]
+  
+  
 }

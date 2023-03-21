@@ -7,8 +7,5 @@ tableextension 50051 "Source Code Setup Ext." extends "Source Code Setup"
             Caption = 'GudfoodOrder';
             TableRelation = "Source Code";
         }
-
     }
-
-
 }

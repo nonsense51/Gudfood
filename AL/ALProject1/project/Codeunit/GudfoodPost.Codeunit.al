@@ -4,38 +4,39 @@ codeunit 50001 "Gudfood Post"
 
     trigger OnRun()
     begin
-        GudfoodLine.SETRANGE("Order No.", Rec."No.");
-        GudfoodLine.FINDSET();
+        GudfoodLine.SetRange("Order No.", Rec."No.");
+        GudfoodLine.Findset();
         PostedGdfdHeader.Init();
-        GudfoodLine.CALCSUMS(Amount, Quantity);
-        PostedGdfdHeader.TRANSFERFIELDS(Rec);
+        GudfoodLine.CalcSums(Amount, Quantity);
+        PostedGdfdHeader.TransferFields(Rec);
         PostedGdfdHeader."Total Amount" := GudfoodLine.Amount;
         PostedGdfdHeader."Total Qty" := GudfoodLine.Quantity;
         CLEAR(GudfoodLine);
         xRec.FindLast();
-        IF "Posting No." = '' THEN
-            IF DocumentNoVisability.ItemNoSeriesIsDefault THEN BEGIN
-                SalesSetup.GET;
-                NoMgt.InitSeries(SalesSetup."Posted Gudfood Order Nos.", xRec."No. Series", 0D, "Posting No.", "No. Series");
+        if Rec."Posting No." = '' THEN
+            IF DocumentNoVisability.ItemNoSeriesIsDefault() THEN BEGIN
+                "Sales&ReceivablesSetup".Get();
+                NoMgt.InitSeries("Sales&ReceivablesSetup"."Posted Gudfood Order Nos.", xRec."No. Series", 0D, Rec."Posting No.", Rec."No. Series");
             END;
-        PostedGdfdHeader.INSERT(TRUE);
+        PostedGdfdHeader.Insert(TRUE);
         GudfoodLine.SETRANGE("Order No.", Rec."No.");
-        GudfoodLine.FINDSET;
+        GudfoodLine.FindSet();
         REPEAT
-            PostedGdfdLine.INIT;
-            PostedGdfdLine.TRANSFERFIELDS(GudfoodLine);
-            PostedGdfdLine.INSERT;
-        UNTIL GudfoodLine.NEXT = 0;
+            PostedGudfoodOrderLine.Init();
+            PostedGudfoodOrderLine.TransferFields(GudfoodLine);
+            PostedGudfoodOrderLine.Insert();
+        UNTIL GudfoodLine.Next() = 0;
         Rec.DELETE(TRUE);
     end;
 
     var
         PostedGdfdHeader: Record "Posted Gudfood Order Header";
-        DocumentNoVisability: Codeunit DocumentNoVisibility;
-        SalesSetup: Record "Sales & Receivables Setup";
-        NoMgt: Codeunit NoSeriesManagement;
+        "Sales&ReceivablesSetup": Record "Sales & Receivables Setup";
         GudfoodLine: Record "Gudfood Order Line";
-        PostedGdfdLine: Record "Posted Gudfood Order Line";
+        PostedGudfoodOrderLine: Record "Posted Gudfood Order Line";
         xRec: Record "Gudfood Order Header";
+        DocumentNoVisability: Codeunit DocumentNoVisibility;
+        NoMgt: Codeunit NoSeriesManagement;
+
 }
 

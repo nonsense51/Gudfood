@@ -12,13 +12,11 @@ table 50017 "Gudfood Order Header"
 
             trigger OnValidate()
             begin
-
-
-                IF "No." <> xRec."No." THEN BEGIN
-                    SalesSetup.GET;
+                if "No." <> xRec."No." then begin
+                    SalesSetup.Get();
                     NoMgt.TestManual(SalesSetup."Gudfood Order Nos.");
                     "No. Series" := '';
-                END;
+                end;
             end;
         }
         field(2; "Sell- to Customer No."; Code[20])
@@ -29,7 +27,7 @@ table 50017 "Gudfood Order Header"
 
             trigger OnValidate()
             begin
-                Customers.GET("Sell- to Customer No.");
+                Customers.Get("Sell- to Customer No.");
                 "Sell-to Customer Name" := Customers.Name;
                 CreateDim(DATABASE::Customer, "Sell- to Customer No.");
             end;
@@ -59,14 +57,14 @@ table 50017 "Gudfood Order Header"
         }
         field(7; "Total Qty"; Decimal)
         {
-            CalcFormula = Sum("Gudfood Order Line".Quantity WHERE("Order No." = FIELD("No.")));
+            CalcFormula = sum("Gudfood Order Line".Quantity where("Order No." = field("No.")));
             Caption = 'Total Qty';
             Editable = false;
             FieldClass = FlowField;
         }
         field(8; "Total Amount"; Decimal)
         {
-            CalcFormula = Sum("Gudfood Order Line".Amount WHERE("Order No." = FIELD("No.")));
+            CalcFormula = sum("Gudfood Order Line".Amount where("Order No." = field("No.")));
             Caption = 'Total Amount';
             Editable = false;
             FieldClass = FlowField;
@@ -80,7 +78,7 @@ table 50017 "Gudfood Order Header"
         field(50; "Shortcut Dimension 1 Code"; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(1));
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(1));
 
             trigger OnValidate()
             begin
@@ -90,7 +88,7 @@ table 50017 "Gudfood Order Header"
         field(51; "Shortcut Dimension 2 Code"; Code[20])
         {
             DataClassification = ToBeClassified;
-            TableRelation = "Dimension Value".Code WHERE("Global Dimension No." = CONST(2));
+            TableRelation = "Dimension Value".Code where("Global Dimension No." = const(2));
 
             trigger OnValidate()
             begin
@@ -104,89 +102,75 @@ table 50017 "Gudfood Order Header"
 
             trigger OnLookup()
             begin
-                ShowDocDim;
+                ShowDocDim();
             end;
         }
     }
 
     keys
     {
-        key(Key1; "No.")
+        key(PK; "No.")
         {
             Clustered = true;
         }
     }
 
-    fieldgroups
-    {
-    }
-
     trigger OnDelete()
     begin
         GudfoodLine.SetRange("Order No.", Rec."No.");
-        GudfoodLine.FindSet;
-        REPEAT
-            GudfoodLine.Delete;
-        UNTIL GudfoodLine.Next = 0;
+        GudfoodLine.FindSet();
+        repeat
+            GudfoodLine.Delete();
+        until GudfoodLine.Next() = 0;
     end;
 
     trigger OnInsert()
     begin
         "Date Created" := TODAY;
 
-        IF "No." = '' THEN
-            IF DocumentNoVisability.ItemNoSeriesIsDefault THEN BEGIN
-                SalesSetup.GET;
+        if "No." = '' then
+            if DocumentNoVisability.ItemNoSeriesIsDefault() then begin
+                SalesSetup.Get();
                 NoMgt.InitSeries(SalesSetup."Gudfood Order Nos.", xRec."No. Series", 0D, "No.", "No. Series");
-            END;
+            end;
 
-        IF "Posting No." = '' THEN
-            IF DocumentNoVisability.ItemNoSeriesIsDefault THEN BEGIN
-                SalesSetup.GET;
+        if "Posting No." = '' then
+            if DocumentNoVisability.ItemNoSeriesIsDefault() then begin
+                SalesSetup.Get();
                 NoMgt.InitSeries(SalesSetup."Posted Gudfood Order Nos.", xRec."No. Series", 0D, "Posting No.", "No. Series");
-            END;
+            end;
     end;
 
     var
-        Customers: Record Customer;
-        DocumentNoVisability: Codeunit DocumentNoVisibility;
-        SalesSetup: Record "Sales & Receivables Setup";
-        NoMgt: Codeunit NoSeriesManagement;
-        ChangeClr: Boolean;
         GudfoodLine: Record "Gudfood Order Line";
+        SalesSetup: Record "Sales & Receivables Setup";
+        Customers: Record Customer;
         DimMgt: Codeunit DimensionManagement;
+        DocumentNoVisability: Codeunit DocumentNoVisibility;
+        NoMgt: Codeunit NoSeriesManagement;
 
-    local procedure UpdateStyle()
-    begin
-        IF "Order Date" < TODAY THEN
-            ChangeClr := TRUE
-        ELSE
-            ChangeClr := FALSE;
-    end;
-
-    [Scope('Internal')]
-    procedure AssistEdit(OldGudfoodOrder: Record "Gudfood Order Header"): Boolean
+    procedure AssistEdit(OldGudfoodOrderHeader: Record "Gudfood Order Header"): Boolean
     var
-        NewGudfoodOrder: Record "Gudfood Order Header";
+        NewGudfoodOrderHeader: Record "Gudfood Order Header";
     begin
-        WITH NewGudfoodOrder DO BEGIN
-            NewGudfoodOrder := Rec;
-            SalesSetup.Get;
+        with NewGudfoodOrderHeader do begin
+            ;
+            NewGudfoodOrderHeader := Rec;
+            SalesSetup.Get();
             SalesSetup.TestField("Gudfood Order Nos.");
-            IF NoMgt.SelectSeries(SalesSetup."Gudfood Order Nos.", OldGudfoodOrder."No. Series", "No. Series") THEN BEGIN
+            if NoMgt.SelectSeries(SalesSetup."Gudfood Order Nos.", OldGudfoodOrderHeader."No. Series", "No. Series") then begin
                 NoMgt.SetSeries("No.");
-                Rec := NewGudfoodOrder;
-                EXIT(TRUE);
-            END;
-        END;
-
+                Rec := NewGudfoodOrderHeader;
+                exit(true);
+            end;
+        end;
     end;
 
     procedure GudfoodRegLinesExist(): Boolean
     begin
         GudfoodLine.Reset();
         GudfoodLine.SetRange("Order No.", "No.");
-        EXIT(GudfoodLine.FindFirst());
+        exit(GudfoodLine.FindFirst());
     end;
 
     procedure CreateDim(Type1: Integer; No1: Code[20])
@@ -196,7 +180,7 @@ table 50017 "Gudfood Order Header"
         No: array[10] of Code[20];
         OldDimSetID: Integer;
     begin
-        SourceCodeSetup.GET;
+        SourceCodeSetup.Get();
         TableID[1] := Type1;
         No[1] := No1;
         "Shortcut Dimension 1 Code" := '';
@@ -204,13 +188,11 @@ table 50017 "Gudfood Order Header"
 
         OldDimSetID := "Dimension Set ID";
 
-        "Dimension Set ID" := DimMgt.GetDefaultDimID(TableID, No, SourceCodeSetup.GudfoodOrder, "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code", 0, 0);
-        IF (OldDimSetID <> "Dimension Set ID") AND
-        GudfoodRegLinesExist
-        THEN BEGIN
-            MODIFY;
+        "Dimension Set ID" := DimMgt.GetDefaultDimId(TableID, No, SourceCodeSetup.GudfoodOrder, "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code", 0, 0);
+        if (OldDimSetID <> "Dimension Set ID") and GudfoodRegLinesExist() then begin
+            Modify();
             UpdateAllLineDim("Dimension Set ID", OldDimSetID);
-        END;
+        end;
     end;
 
     local procedure ValidateShortcutDimCode(FieldNumber: Integer; var ShortcutDimCode: Code[20])
@@ -219,13 +201,13 @@ table 50017 "Gudfood Order Header"
     begin
         OldDimSetID := "Dimension Set ID";
         DimMgt.ValidateShortcutDimValues(FieldNumber, ShortcutDimCode, "Dimension Set ID");
-        IF "No." <> '' THEN
-            MODIFY;
-        IF OldDimSetID <> "Dimension Set ID" THEN BEGIN
-            MODIFY;
-            IF GudfoodRegLinesExist THEN
+        if "No." <> '' then
+            Modify();
+        if OldDimSetID <> "Dimension Set ID" then begin
+            Modify();
+            if GudfoodRegLinesExist() then
                 UpdateAllLineDim("Dimension Set ID", OldDimSetID);
-        END;
+        end;
     end;
 
     procedure ShowDocDim()
@@ -234,37 +216,37 @@ table 50017 "Gudfood Order Header"
     begin
         OldDimSetID := "Dimension Set ID";
         "Dimension Set ID" := DimMgt.EditDimensionSet("Dimension Set ID", "No.", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
-        IF OldDimSetID <> "Dimension Set ID" THEN BEGIN
-            MODIFY;
-            IF GudfoodRegLinesExist THEN
+        if OldDimSetID <> "Dimension Set ID" then begin
+            Modify();
+            if GudfoodRegLinesExist() then
                 UpdateAllLineDim("Dimension Set ID", OldDimSetID);
-        END;
+        end;
     end;
 
     local procedure UpdateAllLineDim(NewParentDimSetID: Integer; OldParentDimSetID: Integer)
     var
-        Text001: Label 'You may have changed a dimension.\\Do you want to update the lines?';
+        Text001Msg: Label 'You may have changed a dimension.\\Do you want to update the lines?';
         NewDimSetID: Integer;
     begin
-        IF NewParentDimSetID = OldParentDimSetID THEN
-            EXIT;
-        IF NOT CONFIRM(Text001) THEN
-            EXIT;
-        GudfoodLine.RESET;
-        GudfoodLine.SETRANGE("Order No.", "No.");
-        GudfoodLine.LOCKTABLE;
-        IF GudfoodLine.FIND('-') THEN
-            REPEAT
+        if NewParentDimSetID = OldParentDimSetID then
+            exit;
+        if not Confirm(Text001Msg) then
+            exit;
+        GudfoodLine.Reset();
+        GudfoodLine.SetRange("Order No.", "No.");
+        GudfoodLine.LockTable();
+        if GudfoodLine.FIND('-') then
+            repeat
                 NewDimSetID := DimMgt.GetDeltaDimSetID(GudfoodLine."Dimension Set ID", NewParentDimSetID, OldParentDimSetID);
-                IF GudfoodLine."Dimension Set ID" <> NewDimSetID THEN BEGIN
+                if GudfoodLine."Dimension Set ID" <> NewDimSetID then begin
                     GudfoodLine."Dimension Set ID" := NewDimSetID;
                     DimMgt.UpdateGlobalDimFromDimSetID(
                     GudfoodLine."Dimension Set ID",
                     GudfoodLine."Shortcut Dimension 1 Code",
                     GudfoodLine."Shortcut Dimension 2 Code");
-                    GudfoodLine.MODIFY;
-                END;
-            UNTIL GudfoodLine.NEXT = 0;
+                    GudfoodLine.Modify();
+                end;
+            until GudfoodLine.Next() = 0;
     end;
 }
 

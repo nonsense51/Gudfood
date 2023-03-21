@@ -69,14 +69,14 @@ table 50019 "Posted Gudfood Order Header"
 
             trigger OnLookup()
             begin
-                ShowDimensions;
+                ShowDimensions();
             end;
         }
     }
 
     keys
     {
-        key(Key1; "No.")
+        key(PK; "No.")
         {
             Clustered = true;
         }
@@ -97,7 +97,7 @@ table 50019 "Posted Gudfood Order Header"
 
     procedure ShowDimensions()
     begin
-        "Dimension Set ID" := DimMgt.EditDimensionSet("Dimension Set ID", STRSUBSTNO('%1', "No."));
+        "Dimension Set ID" := DimMgt.EditDimensionSet("Dimension Set ID", StrSubstNo('%1', "No."));
 
         DimMgt.UpdateGlobalDimFromDimSetID("Dimension Set ID", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
     end;
@@ -106,7 +106,7 @@ table 50019 "Posted Gudfood Order Header"
     begin
         GudfoodLine.Reset();
         GudfoodLine.SetRange("Order No.", "No.");
-        EXIT(GudfoodLine.FindFirst());
+        exit(GudfoodLine.FindFirst());
     end;
 
     procedure ShowDocDim()
@@ -115,39 +115,38 @@ table 50019 "Posted Gudfood Order Header"
     begin
         OldDimSetID := "Dimension Set ID";
         "Dimension Set ID" := DimMgt.EditDimensionSet("Dimension Set ID", "No.", "Shortcut Dimension 1 Code", "Shortcut Dimension 2 Code");
-        IF OldDimSetID <> "Dimension Set ID" THEN BEGIN
-            MODIFY;
-            IF GudfoodRegLinesExist THEN
+        if OldDimSetID <> "Dimension Set ID" then begin
+            Modify();
+            if GudfoodRegLinesExist() then
                 UpdateAllLineDim("Dimension Set ID", OldDimSetID);
-        END;
+        end;
     end;
 
     local procedure UpdateAllLineDim(NewParentDimSetID: Integer; OldParentDimSetID: Integer)
     var
-        Text001: Label 'You may have changed a dimension.\\Do you want to update the lines?';
+        Text001Msg: Label 'You may have changed a dimension.\\Do you want to update the lines?';
         NewDimSetID: Integer;
     begin
-        IF NewParentDimSetID = OldParentDimSetID THEN
-            EXIT;
-        IF NOT CONFIRM(Text001) THEN
-            EXIT;
+        if NewParentDimSetID = OldParentDimSetID then
+            exit;
+        if not CONFIRM(Text001Msg) then
+            exit;
         GudfoodLine.Reset();
-        ;
         GudfoodLine.SetRange("Order No.", "No.");
         GudfoodLine.LockTable();
-        IF GudfoodLine.Find('-') THEN
-            REPEAT
+        if GudfoodLine.Find('-') then
+            repeat
                 NewDimSetID := DimMgt.GetDeltaDimSetID(GudfoodLine."Dimension Set ID", NewParentDimSetID, OldParentDimSetID);
-                IF GudfoodLine."Dimension Set ID" <> NewDimSetID
-                THEN BEGIN
+                if GudfoodLine."Dimension Set ID" <> NewDimSetID
+                then begin
                     GudfoodLine."Dimension Set ID" := NewDimSetID;
                     DimMgt.UpdateGlobalDimFromDimSetID(
                     GudfoodLine."Dimension Set ID",
                     GudfoodLine."Shortcut Dimension 1 Code",
                     GudfoodLine."Shortcut Dimension 2 Code");
-                    GudfoodLine.MODIFY;
-                END;
-            UNTIL GudfoodLine.Next() = 0;
+                    GudfoodLine.Modify();
+                end;
+            until GudfoodLine.Next() = 0;
     end;
 }
 
