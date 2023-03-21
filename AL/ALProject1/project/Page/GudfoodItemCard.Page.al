@@ -85,10 +85,14 @@ page 50004 "Gudfood Item Card"
             }
         }
     }
+    trigger OnDeleteRecord(): Boolean
+    begin
+        CheckIfDelete := true;
+    end;
 
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
-        if not IsPageEmpty(Rec) then begin
+        if not CheckIfDelete then begin
             Rec.TestField(Description);
             Rec.TestField("Unit Price");
             Rec.TestField(ItemType);
@@ -96,13 +100,8 @@ page 50004 "Gudfood Item Card"
         end;
     end;
 
-    procedure IsPageEmpty(GudfoodItem: Record "Gudfood Item"): Boolean
-    begin
-        if Rec."No." <> '' then
-            exit(false)
-        else
-            exit(true)
-    end;
+    var
+        CheckIfDelete: Boolean;
 }
 
 
