@@ -104,15 +104,21 @@ report 50003 "Posted Gudfood Order"
                 {
                     field("Start Date"; "Start Date")
                     {
+                        Caption = 'Start Date';
+                        ToolTip = 'To specify start date filter';
                     }
                     field("End Date"; "End Date")
                     {
+                        Caption = 'End Date';
+                        ToolTip = 'To specify end date filter';
                     }
                 }
                 group("Order No. Filter")
                 {
                     field("Order Number"; OrderNoFilter)
                     {
+                        Caption = 'Order Number';
+                        ToolTip = 'To specify order number filter';
                         Lookup = true;
 
                         trigger OnLookup(var Text: Text): Boolean
@@ -131,6 +137,8 @@ report 50003 "Posted Gudfood Order"
                 {
                     field(HideTotals; HideTotals)
                     {
+                        Caption = 'Hide Totals';
+                        ToolTip = 'To hide totals';
                     }
                 }
             }
@@ -142,10 +150,12 @@ report 50003 "Posted Gudfood Order"
 
         trigger OnOpenPage()
         begin
-            if not "Posted Gudfood Order Header".IsEmpty then begin
-                "Start Date" := "Posted Gudfood Order Header"."Date Created";
-                "End Date" := "Posted Gudfood Order Header"."Date Created";
-                OrderNoFilter := "Posted Gudfood Order Header"."No.";
+            if not PostedGudFoodOrderHdr.IsEmpty then begin
+                PostedGudFoodOrderHdr.SetCurrentKey("Date Created");
+                PostedGudFoodOrderHdr.FindFirst();
+                "Start Date" := PostedGudFoodOrderHdr."Date Created";
+                PostedGudFoodOrderHdr.FindLast();
+                "End Date" := PostedGudFoodOrderHdr."Date Created";
             end;
         end;
     }
@@ -161,23 +171,33 @@ report 50003 "Posted Gudfood Order"
     end;
 
     var
-        PostedGudFoodOrderHdr: Record "Gudfood Order Header";
+        PostedGudFoodOrderHdr: Record "Posted Gudfood Order Header";
+        GudFoodOrderHdr: Record "Gudfood Order Header";
         OrderPage: Page "Posted Gudfood Order List";
         UsersID: Code[30];
+        HideTotals: Boolean;
         DocumentDate: Date;
         "Start Date": Date;
         "End Date": Date;
-        OrderNoFilter: Text[250];
-        HideTotals: Boolean;
 
-    procedure PostedGudfoodOrderPrint(NewGudfoodOrderHeader: Record "Gudfood Order Header")
+        OrderNoFilter: Text[250];
+
+
+    procedure PostedGudfoodOrderPrint(NewGudfoodOrderHeader: Record "Gudfood Order Header"; OrderFilters: Text[250])
     begin
-        PostedGudFoodOrderHdr := NewGudfoodOrderHeader;
+        GudFoodOrderHdr := NewGudfoodOrderHeader;
+        OrderNoFilter := OrderFilters;
     end;
 
     procedure SetGlobalVar(NewPostedGudfoodOrderHeader: Record "Posted Gudfood Order Header")
     begin
         "Posted Gudfood Order Header" := NewPostedGudfoodOrderHeader;
+    end;
+
+    procedure SetGlobalVarForPrintAction(NewGudfoodOrderHeader: Record "Posted Gudfood Order Header"; OrderFilters: Text[250])
+    begin
+        PostedGudFoodOrderHdr := NewGudfoodOrderHeader;
+        OrderNoFilter := OrderFilters;
     end;
 }
 

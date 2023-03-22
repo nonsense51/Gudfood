@@ -56,13 +56,15 @@ page 50012 "Gudfood Order List"
 
     actions
     {
-        area(Creation)
+        area(processing)
         {
             action(Post)
             {
                 ToolTip = 'To post order to the Posted Documents';
                 Image = PostedOrder;
+                ApplicationArea = All;
                 Promoted = true;
+                PromotedCategory = Process;
 
                 trigger OnAction()
                 begin
@@ -73,49 +75,60 @@ page 50012 "Gudfood Order List"
             {
                 ToolTip = 'To post order to the Posted Documents and print report';
                 Image = PrintReport;
+                ApplicationArea = All;
                 Promoted = true;
+                PromotedCategory = Process;
 
                 trigger OnAction()
+                var
+                    OrderFilters: Text[250];
                 begin
+                    OrderFilters += GetSelectionFilters();
+                    GudfoodPostPrint.SetOderFilters(OrderFilters);
                     GudfoodPostPrint.Run(Rec);
                 end;
             }
         }
         area(Reporting)
         {
-            group(PrintAndExportDocument)
+            action("Print Document")
             {
-                action("Print Document")
-                {
-                    ToolTip = 'To print report';
-                    Image = PrintDocument;
-                    Promoted = true;
-                    PromotedIsBig = true;
-                    PromotedOnly = true;
+                ToolTip = 'To print report';
+                Image = PrintDocument;
+                ApplicationArea = All;
+                Promoted = true;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                PromotedCategory = Report;
 
-                    trigger OnAction()
-                    var
-                        GudfoodOrderPrint: Report "Gudfood Order";
-                    begin
-                        CurrPage.SetSelectionFilter(Rec);
-                        GudfoodOrderPrint.SetGlobalVar(Rec);
-                        GudfoodOrderPrint.Run();
-                    end;
-                }
-                action("Export Order")
-                {
-                    ToolTip = 'To export order to Xml file';
-                    Image = Export;
-                    Promoted = true;
-                    PromotedIsBig = true;
-                    PromotedOnly = true;
+                trigger OnAction()
+                var
 
-                    trigger OnAction()
-                    begin
-                        CurrPage.SetSelectionFilter(Rec);
-                        XMLPORT.Run(50000, false, false, Rec);
-                    end;
-                }
+                    GudfoodOrderPrint: Report "Gudfood Order";
+                    OrderFilters: Text;
+                begin
+                    CurrPage.SetSelectionFilter(Rec);
+
+                    OrderFilters += GetSelectionFilters();
+                    GudfoodOrderPrint.SetGlobalVarForPrintAction(Rec, OrderFilters);
+                    GudfoodOrderPrint.Run();
+                end;
+            }
+            action("Export Order")
+            {
+                ToolTip = 'To export order to Xml file';
+                Image = Export;
+                ApplicationArea = All;
+                Promoted = true;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                PromotedCategory = Report;
+
+                trigger OnAction()
+                begin
+                    CurrPage.SetSelectionFilter(Rec);
+                    XMLPORT.Run(50000, false, false, Rec);
+                end;
             }
         }
         area(navigation)
@@ -124,6 +137,7 @@ page 50012 "Gudfood Order List"
             {
                 ToolTip = 'To see the dimensions';
                 Image = Dimensions;
+                ApplicationArea = All;
                 ShortCutKey = 'Shift+Ctrl+D';
 
                 trigger OnAction()
@@ -152,8 +166,8 @@ page 50012 "Gudfood Order List"
     var
         SelectionFilterManagement: Codeunit SelectionFilterManagement;
     begin
-        CurrPage.SETSELECTIONFILTER(Rec);
-        GudfoodOrderHeaderRecordRef.GETTABLE(Rec);
+        CurrPage.SetSelectionFilter(Rec);
+        GudfoodOrderHeaderRecordRef.GetTable(Rec);
         exit(SelectionFilterManagement.GetSelectionFilter(GudfoodOrderHeaderRecordRef, Rec.FIELDNO("No.")));
     end;
 

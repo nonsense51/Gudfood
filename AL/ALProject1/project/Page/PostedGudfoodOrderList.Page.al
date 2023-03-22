@@ -56,6 +56,32 @@ page 50013 "Posted Gudfood Order List"
 
     actions
     {
+        area(Processing)
+        {
+            action("Print Document")
+            {
+                ToolTip = 'To print report';
+                Image = PrintDocument;
+                ApplicationArea = All;
+                Promoted = true;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                PromotedCategory = Report;
+
+                trigger OnAction()
+                var
+
+                    GudfoodOrderPrint: Report "Posted Gudfood Order";
+                    OrderFilters: Text[250];
+                begin
+                    CurrPage.SetSelectionFilter(Rec);
+
+                    OrderFilters += GetSelectionFilters();
+                    GudfoodOrderPrint.SetGlobalVarForPrintAction(Rec, OrderFilters);
+                    GudfoodOrderPrint.Run();
+                end;
+            }
+        }
         area(navigation)
         {
             action(Dimensions)

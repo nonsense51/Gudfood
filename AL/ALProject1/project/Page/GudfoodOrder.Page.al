@@ -3,6 +3,8 @@ page 50008 "Gudfood Order"
     Caption = 'Gudfood Order';
     PageType = Document;
     SourceTable = "Gudfood Order Header";
+    ApplicationArea = All;
+    UsageCategory = Documents;
 
     layout
     {
@@ -66,7 +68,9 @@ page 50008 "Gudfood Order"
             {
                 ToolTip = 'To post order to the Posted Documents';
                 Image = PostedOrder;
+                ApplicationArea = All;
                 Promoted = true;
+                PromotedCategory = Process;
 
                 trigger OnAction()
                 begin
@@ -77,46 +81,52 @@ page 50008 "Gudfood Order"
             {
                 ToolTip = 'To post order to the Posted Documents and print report';
                 Image = PrintReport;
+                ApplicationArea = All;
                 Promoted = true;
+                PromotedCategory = Process;
 
                 trigger OnAction()
                 begin
                     GudfoodPostPrint.Run(Rec);
                 end;
             }
-            group(PrintAndExportDocument)
+        }
+        area(Reporting)
+        {
+            action("Print Document")
             {
-                action("Print Document")
-                {
-                    ToolTip = 'To print report';
-                    Image = PrintDocument;
-                    Promoted = true;
-                    PromotedIsBig = true;
-                    PromotedOnly = true;
+                ToolTip = 'To print report';
+                Image = PrintDocument;
+                ApplicationArea = All;
+                Promoted = true;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                PromotedCategory = Report;
 
-                    trigger OnAction()
-                    var
-                        GudfoodOrderPrint: Report "Gudfood Order";
-                    begin
-                        CurrPage.SetSelectionFilter(Rec);
-                        GudfoodOrderPrint.SetGlobalVar(Rec);
-                        GudfoodOrderPrint.Run();
-                    end;
-                }
-                action("Export Order")
-                {
-                    ToolTip = 'To export order to Xml file';
-                    Image = Export;
-                    Promoted = true;
-                    PromotedIsBig = true;
-                    PromotedOnly = true;
+                trigger OnAction()
+                var
+                    GudfoodOrderPrint: Report "Gudfood Order";
+                begin
+                    CurrPage.SetSelectionFilter(Rec);
+                    GudfoodOrderPrint.SetGlobalVar(Rec);
+                    GudfoodOrderPrint.Run();
+                end;
+            }
+            action("Export Order")
+            {
+                ToolTip = 'To export order to Xml file';
+                Image = Export;
+                ApplicationArea = All;
+                Promoted = true;
+                PromotedIsBig = true;
+                PromotedOnly = true;
+                PromotedCategory = Report;
 
-                    trigger OnAction()
-                    begin
-                        CurrPage.SetSelectionFilter(Rec);
-                        XMLPORT.Run(50000, false, false, Rec);
-                    end;
-                }
+                trigger OnAction()
+                begin
+                    CurrPage.SetSelectionFilter(Rec);
+                    XMLPORT.Run(50000, false, false, Rec);
+                end;
             }
         }
         area(navigation)
@@ -125,6 +135,7 @@ page 50008 "Gudfood Order"
             {
                 ToolTip = 'To see the dimensions';
                 Image = Dimensions;
+                ApplicationArea = All;
                 ShortCutKey = 'Shift+Ctrl+D';
 
                 trigger OnAction()

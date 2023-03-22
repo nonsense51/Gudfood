@@ -92,7 +92,7 @@ page 50004 "Gudfood Item Card"
 
     trigger OnQueryClosePage(CloseAction: Action): Boolean
     begin
-        if not CheckIfDelete then begin
+        if (not CheckIfDelete) and (Rec."No." <> '') then begin
             Rec.TestField(Description);
             Rec.TestField("Unit Price");
             Rec.TestField(ItemType);
