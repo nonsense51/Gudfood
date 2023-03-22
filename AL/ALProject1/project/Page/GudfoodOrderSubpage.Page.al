@@ -27,7 +27,7 @@ page 50007 "Gudfood Order Subpage"
                     ToolTip = 'To specify customer number';
                     trigger OnValidate()
                     begin
-                        ShowShortcutDimCode(ShortcutDimCode);
+                        Rec.ShowShortcutDimCode(ShortcutDimCode);
                     end;
                 }
                 field("Date Created"; Rec."Date Created")

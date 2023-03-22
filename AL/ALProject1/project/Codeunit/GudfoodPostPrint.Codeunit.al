@@ -6,14 +6,20 @@ codeunit 50002 "Gudfood Post + Print"
     begin
         GudfoodPost.Run(Rec);
         Commit();
-        PostedGudfoodOrder.PostedGudfoodOrderPrint(Rec);
+        PostedGudfoodOrder.PostedGudfoodOrderPrint(Rec, OrderFilters);
         PostedGudfoodOrder.Run();
+    end;
+
+    procedure SetOderFilters(OrderFilter: Text[250])
+    begin
+        OrderFilters += OrderFilter;
     end;
 
     var
 
         PostedGudfoodOrder: Report "Posted Gudfood Order";
         GudfoodPost: Codeunit "Gudfood Post";
+        OrderFilters: Text[250];
 
 }
 

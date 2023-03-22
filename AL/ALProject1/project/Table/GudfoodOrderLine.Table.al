@@ -64,8 +64,8 @@ table 50018 "Gudfood Order Line"
             Caption = 'Item Type';
             CalcFormula = lookup("Gudfood Item".ItemType where("No." = field("Item No.")));
             FieldClass = FlowField;
-            OptionMembers = " ",Salat,Burger,Capcake,Drink;
-            OptionCaption = ' ,Salat,Burger,Capcake,Drink';
+            OptionMembers = " ",Salat,Burger,Cupcake,Drink;
+            OptionCaption = ' ,Salat,Burger,Cupcake,Drink';
         }
         field(7; Description; Text[100])
         {

@@ -103,15 +103,21 @@ report 50002 "Gudfood Order"
                 {
                     field("Start Date"; "Start Date")
                     {
+                        Caption = 'Start Date';
+                        ToolTip = 'To specify start date filter';
                     }
                     field("End Date"; "End Date")
                     {
+                        Caption = 'End Date';
+                        ToolTip = 'To specify end date filter';
                     }
                 }
                 group("Order No. Filter")
                 {
                     field("Order Number"; OrderNoFilter)
                     {
+                        Caption = 'Order Number';
+                        ToolTip = 'To specify order number filter';
                         Lookup = true;
 
                         trigger OnLookup(var Text: Text): Boolean
@@ -130,6 +136,8 @@ report 50002 "Gudfood Order"
                 {
                     field(HideTotals; HideTotals)
                     {
+                        Caption = 'Hide Totals';
+                        ToolTip = 'To hide totals';
                     }
                 }
             }
@@ -138,9 +146,11 @@ report 50002 "Gudfood Order"
         trigger OnOpenPage()
         begin
             if not GudfoodOrderHdrGlb.IsEmpty then begin
+                GudfoodOrderHdrGlb.SetCurrentKey("Date Created");
+                GudfoodOrderHdrGlb.FindFirst();
                 "Start Date" := GudfoodOrderHdrGlb."Date Created";
+                GudfoodOrderHdrGlb.FindLast();
                 "End Date" := GudfoodOrderHdrGlb."Date Created";
-                OrderNoFilter := GudfoodOrderHdrGlb."No.";
             end;
         end;
     }
@@ -164,6 +174,12 @@ report 50002 "Gudfood Order"
     procedure SetGlobalVar(NewGudfoodOrderHeader: Record "Gudfood Order Header")
     begin
         GudfoodOrderHdrGlb := NewGudfoodOrderHeader;
+    end;
+
+    procedure SetGlobalVarForPrintAction(NewGudfoodOrderHeader: Record "Gudfood Order Header"; OrderFilters: Text[250])
+    begin
+        GudfoodOrderHdrGlb := NewGudfoodOrderHeader;
+        OrderNoFilter := OrderFilters;
     end;
 }
 

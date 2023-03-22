@@ -37,7 +37,8 @@ table 50020 "Posted Gudfood Order Line"
             CalcFormula = lookup("Gudfood Item".ItemType where("No." = field("Item No.")));
             Caption = 'Item Type';
             FieldClass = FlowField;
-            OptionMembers = " ",Salat,Burger,Capcake,Drink;
+            OptionMembers = " ",Salat,Burger,Cupcake,Drink;
+            OptionCaption = ' ,Salat,Burger,Cupcake,Drink';
             TableRelation = "Gudfood Item".ItemType;
         }
         field(7; Description; Text[100])

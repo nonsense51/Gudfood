@@ -15,11 +15,15 @@ page 50003 "Gudfood Item List"
             {
                 field("No."; Rec."No.")
                 {
-                    ToolTip = 'To specify number of item';
+                    ToolTip = 'Specifies number of item';
+                }
+                field(Description; Rec.Description)
+                {
+                    ToolTip = 'Specifies the description';
                 }
                 field("Unit Price"; Rec."Unit Price")
                 {
-                    ToolTip = 'To specify product price';
+                    ToolTip = 'Specifies product price';
                 }
                 field(ItemType; Rec.ItemType)
                 {

@@ -36,8 +36,8 @@ table 50016 "Gudfood Item"
             Caption = 'Type';
             DataClassification = ToBeClassified;
             NotBlank = true;
-            OptionCaption = ' ,Salat,Burger,Capcake,Drink';
-            OptionMembers = " ",Salat,Burger,Capcake,Drink;
+            OptionCaption = ' ,Salat,Burger,Cupcake,Drink';
+            OptionMembers = " ",Salat,Burger,Cupcake,Drink;
         }
         field(5; "Qty. Ordered"; Decimal)
         {

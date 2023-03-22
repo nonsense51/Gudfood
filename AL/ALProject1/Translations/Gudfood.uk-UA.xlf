@@ -719,7 +719,7 @@
         </trans-unit>
         <trans-unit id="Page 2070028540 - Property 2879900210" size-unit="char" translate="yes" xml:space="preserve">
           <source>Gudfood Order List</source>
-          <target>Список товарів Gudfood</target>
+          <target>Список замовлень Gudfood</target>
           <note from="Developer" annotates="general" priority="2"></note>
           <note from="Xliff Generator" annotates="general" priority="3">Page Gudfood Order List - Property Caption</note>
         </trans-unit>

@@ -66,6 +66,7 @@ page 50009 "Posted Gudfood Order"
                 Promoted = true;
                 PromotedIsBig = true;
                 PromotedOnly = true;
+                PromotedCategory = Report;
 
                 trigger OnAction()
                 var
